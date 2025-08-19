@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+
+/* Base */
+:root { color-scheme: light; }
+html, body { height: 100%; }
+
+/* Layout */
+.container-max { @apply mx-auto w-full max-w-6xl px-4; }
+.section { @apply py-12; }
+.text-ink { @apply text-slate-900; }
+
+/* UI atoms */
+.card { @apply rounded-2xl border border-slate-100 bg-white shadow-soft; }
+.badge { @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-700; }
+
+.input { @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500/30; }
+.label { @apply text-sm font-medium text-ink; }
+.label.required::after { content:" *"; color:#ef4444; }
+
+.btn { @apply inline-flex items-center justify-center rounded-xl border border-slate-200 px-3 py-2 text-sm transition hover:bg-slate-100; }
+.btn-primary { @apply inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700; }
+.btn-outline { @apply inline-flex items-center justify-center rounded-xl border border-slate-300 px-3 py-2 text-sm hover:bg-slate-100; }
+
+/* Header glass */
+.header-glass { @apply bg-white/70 backdrop-blur border-b border-slate-100; }
+
+/* ===== SINGLE, FIXED SITE BACKDROP (no per-section restart) ===== */
+body {
+  background: #ffffff;
+  position: relative;
+  min-height: 100%;
+}
+body::before {
+  content: "";
+  position: fixed;        /* stays put as you scroll */
+  inset: -20% -20% 0 -20%;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(1200px 420px at 20% -10%, rgba(52,211,153,0.12), transparent 60%),
+    linear-gradient(180deg, #ecfdf5 0%, #ffffff 60%);
+}
+
+/* iOS segmented control (How It Works pill) */
+.segmented {
+  @apply inline-grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  padding: 4px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.08);
+}
+.segmented-indicator {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  bottom: 4px;
+  width: calc(50% - 8px);
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #34d399, #10b981);
+  transition: transform .25s ease;
+}
+.segmented-btn {
+  @apply relative z-10 px-6 py-2 text-sm rounded-full;
+  color: #0f172a;
+}
+.segmented-btn:hover { color: #065f46; }
+
+/* Dark mode baseline */
+.dark .card { @apply bg-slate-900 border-slate-800; }
+.dark .badge { @apply bg-slate-800 text-slate-300; }
+.dark .input { @apply bg-slate-900 border-slate-700 text-white; }
+.dark .label { @apply text-white; }
+.dark .btn { @apply border-slate-700 text-white hover:bg-slate-800; }
+.dark .btn-outline { @apply border-slate-700 hover:bg-slate-800 text-white; }
+.dark .btn-primary { @apply bg-emerald-600 hover:bg-emerald-700; }
+.dark .header-glass { @apply bg-slate-900/70 border-slate-800; }
+/* === Featured carousels (snap cleanly, no clipping, no seam) === */
+.carousel-viewport{
+  overflow: hidden;                 /* hides offscreen slides cleanly */
+  scroll-snap-type: x mandatory;    /* snap happens on the viewport */
+  scroll-behavior: smooth;
+}
+
+.carousel-track{
+  display: flex;
+  gap: 1.25rem;                     /* 20px gap */
+}
+
+.carousel-slide{
+  min-width: calc(50% - 0.625rem);  /* two-up: half minus half-gap */
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@media (max-width: 767px){
+  .carousel-slide{ min-width: 100%; }
+}
+
+/* Seam killer: lighter, tighter shadow only inside carousels */
+.carousel-track .card{
+  box-shadow: 0 2px 6px rgba(2, 6, 23, 0.04);
+  border-color: #e5e7eb;
+}
+.carousel-track .card:hover{
+  box-shadow: 0 4px 10px rgba(2, 6, 23, 0.06);
+}
+/* Leaflet emoji markers (contractor pins) */
+.pro-emoji .emoji-pin{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;font-size:18px;background:#fff;
+  border:1px solid #e5e7eb;border-radius:9999px;
+  box-shadow:0 8px 20px rgba(2,6,23,0.12);
+}
+.leaflet-container{border-radius:1rem}
+
+/* (Optional) small map overlay button hover */
+.map-overlay button:hover{ filter:brightness(0.97); }
+/* Leaflet × Tailwind: ensure tiles/icons are not constrained by max-width */
+.leaflet-container img,
+.leaflet-container .leaflet-marker-icon,
+.leaflet-container .leaflet-marker-shadow {
+  max-width: none !important;
+}
